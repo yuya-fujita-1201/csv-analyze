@@ -16,7 +16,7 @@ A standalone desktop application for analyzing large CSV and Excel files with SQ
 
 ### Download Prebuilt Binaries
 
-1. Go to the [Releases](https://github.com/your-username/csv-analyzer/releases) page
+1. Go to the [Releases](https://github.com/yuya-fujita-1201/csv-analyze/releases) page
 2. Download the appropriate version for your platform:
    - Windows: `csv-analyzer_windows.exe`
    - macOS: `csv-analyzer_macos.dmg`
@@ -37,8 +37,8 @@ A standalone desktop application for analyzing large CSV and Excel files with SQ
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/csv-analyzer.git
-   cd csv-analyzer
+   git clone https://github.com/yuya-fujita-1201/csv-analyze.git
+   cd csv-analyze
    ```
 
 2. Install dependencies:
@@ -179,8 +179,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-- **Issues**: Report bugs or request features on [GitHub Issues](https://github.com/your-username/csv-analyzer/issues)
-- **Discussions**: General questions on [GitHub Discussions](https://github.com/your-username/csv-analyzer/discussions)
+- **Issues**: Report bugs or request features on [GitHub Issues](https://github.com/yuya-fujita-1201/csv-analyze/issues)
+- **Discussions**: General questions on [GitHub Discussions](https://github.com/yuya-fujita-1201/csv-analyze/discussions)
 
 ## Changelog
 
