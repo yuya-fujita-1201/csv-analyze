@@ -1,187 +1,354 @@
 # CSV Analyzer
 
-A standalone desktop application for analyzing large CSV and Excel files with SQL capabilities.
+補助金申請データなどの大容量CSV・Excelファイルを分析するためのスタンドアロンデスクトップアプリケーションです。
+技術知識がなくても簡単に使える、オフライン対応の高性能データ分析ツールです。
 
-## Features
+## 🚀 特徴
 
-- **File Support**: CSV (.csv) and Excel (.xlsx, .xls) files
-- **Large Data Handling**: Process files with up to 2,000 columns × 3,000 rows × 4 files
-- **SQL Interface**: Execute SQL queries on your data using DuckDB-Wasm
-- **GUI Query Builder**: Build queries visually without writing SQL
-- **Virtual Scrolling**: Smooth performance with large datasets
-- **Data Export**: Export results to CSV or Excel format
-- **Standalone**: No external dependencies or internet connection required
+- **多様なファイル対応**: CSV (.csv) およびExcel (.xlsx, .xls) ファイルに対応
+- **大容量データ処理**: 2,000列 × 3,000行 × 4ファイルまでの大規模データを処理可能
+- **SQL実行機能**: DuckDB-Wasmを使用した高速SQL処理
+- **GUIクエリビルダー**: SQLを書かずに視覚的にクエリを構築
+- **仮想スクロール**: 大量データでも滑らかな表示パフォーマンス
+- **データエクスポート**: 結果をCSVまたはExcel形式で出力
+- **スタンドアロン**: 外部依存関係やインターネット接続不要
+- **文字コード対応**: UTF-8、Shift_JIS自動判定・変換
 
-## Installation
+## 📥 インストール
 
-### Download Prebuilt Binaries
+### 簡単インストール（推奨）
 
-1. Go to the [Releases](https://github.com/yuya-fujita-1201/csv-analyze/releases) page
-2. Download the appropriate version for your platform:
-   - Windows: `csv-analyzer_windows.exe`
-   - macOS: `csv-analyzer_macos.dmg`
-   - Linux: `csv-analyzer_linux.AppImage`
+1. [リリースページ](https://github.com/yuya-fujita-1201/csv-analyze/releases)にアクセス
+2. お使いのプラットフォームに適したファイルをダウンロード：
+   - **Windows**: `csv-analyzer_windows.exe` (約30MB)
+   - **macOS**: `csv-analyzer_macos.dmg` (約40MB)
+   - **Linux**: `csv-analyzer_linux.AppImage` (約35MB)
+3. ダウンロードした実行ファイルをダブルクリックで起動
 
-### Building from Source
+### 初回起動時の注意
 
-#### Prerequisites
+**Windows**: 「WindowsによってPCが保護されました」と表示された場合
+1. 「詳細情報」をクリック
+2. 「実行」ボタンをクリック
 
-- Node.js 20+
-- Rust 1.78+
-- Platform-specific dependencies:
-  - **Linux**: `sudo apt-get install libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf`
-  - **Windows**: Visual Studio Build Tools or Visual Studio Community
-  - **macOS**: Xcode Command Line Tools
+**macOS**: 「開発元が未確認」と表示された場合
+1. システム環境設定 → セキュリティとプライバシー
+2. 「このまま開く」をクリック
 
-#### Build Steps
+## 📖 使い方
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yuya-fujita-1201/csv-analyze.git
-   cd csv-analyze
-   ```
+### ステップ1: アプリケーションの起動
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+1. ダウンロードした実行ファイルをダブルクリック
+2. アプリケーションが起動し、メイン画面が表示されます
 
-3. Build the application:
-   ```bash
-   npm run tauri build
-   ```
+### ステップ2: データファイルの読み込み
 
-## Usage
+#### 方法1: ドラッグ&ドロップ
+1. エクスプローラー（Windows）やFinder（macOS）でCSV/Excelファイルを開く
+2. ファイルをアプリの左側エリアにドラッグ&ドロップ
 
-### Basic Workflow
+#### 方法2: ファイル選択ボタン
+1. 左サイドバーの「ファイルを選択」ボタンをクリック
+2. ファイル選択ダイアログで対象ファイルを選択
+3. 複数ファイルの選択が可能（Ctrl+クリックまたはCmd+クリック）
 
-1. **Launch the application** by double-clicking the executable
-2. **Load data files** using the file uploader in the sidebar
-3. **View data** in the Data tab with virtual scrolling
-4. **Query data** using either:
-   - SQL Editor: Write custom SQL queries
-   - Query Builder: Visual query construction
-5. **Export results** to CSV or Excel format
+#### 読み込み完了
+- ファイルが正常に読み込まれると、左側に「テーブル一覧」として表示されます
+- ファイル名から拡張子を除いた名前がテーブル名になります
 
-### SQL Examples
+### ステップ3: データの確認と表示
+
+1. **「Data」タブ**をクリック
+2. 読み込んだデータが表形式で表示されます
+3. 以下の操作が可能：
+   - **列の並び替え**: 列ヘッダーをクリック
+   - **フィルタリング**: 上部の検索ボックスで全体検索
+   - **スクロール**: 大量データでも滑らかに表示
+
+### ステップ4: データ分析
+
+#### SQLエディタを使用する場合
+
+1. **「SQL Editor」タブ**をクリック
+2. テキストエリアにSQLクエリを入力：
 
 ```sql
--- View all data
-SELECT * FROM your_file LIMIT 100;
+-- データ全体を確認（最初の100行）
+SELECT * FROM テーブル名 LIMIT 100;
 
--- Count rows
-SELECT COUNT(*) as total_rows FROM your_file;
+-- 総行数をカウント
+SELECT COUNT(*) as 総行数 FROM テーブル名;
 
--- Group by column
-SELECT category, COUNT(*) as count 
-FROM your_file 
-GROUP BY category 
-ORDER BY count DESC;
+-- 特定列の重複なし値を確認
+SELECT DISTINCT カテゴリ FROM テーブル名;
 
--- Filter data
-SELECT * FROM your_file 
-WHERE amount > 1000 
-AND status = 'active';
+-- 条件による絞り込み
+SELECT * FROM テーブル名 
+WHERE 金額 >= 10000 
+AND 地域 = '東京都';
+
+-- グループ別の集計
+SELECT 
+    カテゴリ,
+    COUNT(*) as 件数,
+    AVG(金額) as 平均金額,
+    SUM(金額) as 合計金額
+FROM テーブル名 
+GROUP BY カテゴリ 
+ORDER BY 合計金額 DESC;
 ```
 
-## Configuration
+3. **「実行」ボタン**をクリックまたは**Ctrl+Enter**
+4. 結果が下部に表示され、実行時間も確認できます
 
-The application uses `config/default.json` for settings:
+#### GUIクエリビルダーを使用する場合
+
+1. **「Query」タブ**をクリック
+2. **「列を追加」**で必要な列を選択
+3. **「フィルタを追加」**で条件を設定：
+   - 列名を選択
+   - 演算子を選択（=、>、<、LIKE など）
+   - 値を入力
+4. 右側で自動生成されたSQL文を確認
+5. 必要に応じて制限行数や並び替えを設定
+
+### ステップ5: 結果のエクスポート
+
+1. 分析結果を確認後、**「Export Results」ボタン**をクリック
+2. 保存ダイアログで以下を設定：
+   - **保存先フォルダ**を選択
+   - **ファイル名**を入力
+   - **ファイル形式**を選択（CSV推奨）
+   - **文字コード**を選択（UTF-8推奨）
+3. **「保存」**をクリックして完了
+
+## 💡 実用的な使用例
+
+### 例1: 補助金申請データの分析
+
+```sql
+-- 地域別の申請件数と平均金額
+SELECT 
+    都道府県,
+    COUNT(*) as 申請件数,
+    AVG(申請金額) as 平均申請金額,
+    SUM(申請金額) as 総申請金額
+FROM 補助金申請データ 
+GROUP BY 都道府県 
+ORDER BY 総申請金額 DESC;
+
+-- 業種別の採択率
+SELECT 
+    業種,
+    COUNT(*) as 総申請数,
+    SUM(CASE WHEN 採択結果 = '採択' THEN 1 ELSE 0 END) as 採択数,
+    ROUND(SUM(CASE WHEN 採択結果 = '採択' THEN 1 ELSE 0 END) * 100.0 / COUNT(*), 2) as 採択率
+FROM 補助金申請データ 
+GROUP BY 業種 
+ORDER BY 採択率 DESC;
+```
+
+### 例2: 売上データの分析
+
+```sql
+-- 月別売上推移
+SELECT 
+    strftime('%Y-%m', 売上日付) as 年月,
+    SUM(売上金額) as 月別売上,
+    COUNT(*) as 取引件数
+FROM 売上データ 
+GROUP BY strftime('%Y-%m', 売上日付) 
+ORDER BY 年月;
+
+-- 商品別売上ランキング
+SELECT 
+    商品名,
+    SUM(売上金額) as 総売上,
+    COUNT(*) as 販売回数,
+    AVG(売上金額) as 平均単価
+FROM 売上データ 
+GROUP BY 商品名 
+ORDER BY 総売上 DESC 
+LIMIT 20;
+```
+
+## ⚙️ 対応ファイル形式と制限
+
+### 対応ファイル形式
+- **CSV**: .csv（カンマ区切り、セミコロン区切り、タブ区切り）
+- **Excel**: .xlsx, .xls
+
+### 文字コード
+- **読み込み**: 自動判定（UTF-8、Shift_JIS、EUC-JP対応）
+- **出力**: UTF-8、Shift_JIS選択可能
+
+### データサイズ制限
+- **推奨環境**: 16GB RAM、SSD
+- **最大処理能力**: 2,000列 × 3,000行 × 4ファイル
+- **読み込み時間**: 最大20秒程度
+- **メモリ使用量**: 入力ファイルサイズの約3-4倍
+
+## 🔧 トラブルシューティング
+
+### Q: ファイルが読み込めない
+- **確認点**:
+  - ファイル形式が.csv、.xlsx、.xlsか
+  - ファイルが他のアプリで開かれていないか
+  - ファイルサイズが推奨範囲内か
+  - ファイルが破損していないか
+
+### Q: 文字化けが発生する
+- **対処法**:
+  - CSVファイルをExcelで開き「UTF-8 CSV」で保存し直す
+  - メモ帳で開いて「UTF-8」で保存し直す
+  - 元データの文字コードを確認
+
+### Q: アプリの動作が重い
+- **対処法**:
+  - 不要な列を削除してファイルサイズを削減
+  - 複数ファイルの場合、一つずつ処理
+  - PCのメモリ使用量を確認（タスクマネージャー）
+  - SQLクエリにLIMIT句を追加
+
+### Q: SQLエラーが発生する
+- **よくあるエラーと対処法**:
+  - **テーブル名エラー**: ファイル名（拡張子なし）が正しいか確認
+  - **列名エラー**: スペースや特殊文字を含む列名は`"列名"`で囲む
+  - **構文エラー**: SQLの構文（SELECT、FROM等）が正しいか確認
+
+### Q: エクスポートできない
+- **確認点**:
+  - 保存先フォルダの書き込み権限
+  - 同名ファイルが開かれていないか
+  - ディスクの空き容量
+
+## 🔧 設定
+
+アプリケーションは `config/default.json` で詳細設定が可能：
 
 ```json
 {
   "memory": {
-    "maxHeapSize": 4096,
-    "warningThreshold": 0.8
+    "maxHeapSize": 4096,        // 最大メモリ使用量（MB）
+    "warningThreshold": 0.8     // メモリ警告閾値（80%）
   },
   "display": {
-    "pageSize": 100,
-    "maxColumnsPreview": 20
+    "pageSize": 100,            // 1ページあたりの表示行数
+    "maxColumnsPreview": 20,    // プレビュー表示する最大列数
+    "theme": "auto"             // テーマ（auto/light/dark）
   },
   "export": {
     "csv": {
-      "delimiter": ",",
-      "header": true
+      "delimiter": ",",         // 区切り文字
+      "quote": "\"",           // 引用符
+      "header": true           // ヘッダー行を含む
     }
+  },
+  "logging": {
+    "level": "info",            // ログレベル
+    "maxFiles": 10,             // 最大ログファイル数
+    "maxSize": "10MB"           // ログファイル最大サイズ
   }
 }
 ```
 
-## Technical Architecture
+## 🏗️ 技術仕様
 
-- **Frontend**: React 18 + TypeScript + TanStack Table
-- **Backend**: Tauri 2.x + Rust
-- **Database**: DuckDB-Wasm for in-memory SQL processing
-- **Bundling**: Single executable with embedded WebView
+- **フロントエンド**: React 18 + TypeScript + TanStack Table
+- **バックエンド**: Tauri 2.x + Rust
+- **データベース**: DuckDB-Wasm（インメモリSQL処理）
+- **配布**: WebView内蔵の単一実行ファイル
+- **セキュリティ**: オフライン動作、サンドボックス実行
 
-## Development
+## 💻 開発者向け情報
 
-### Development Server
+### 開発環境のセットアップ
 
 ```bash
+# リポジトリをクローン
+git clone https://github.com/yuya-fujita-1201/csv-analyze.git
+cd csv-analyze
+
+# 依存関係をインストール
+npm install
+
+# 開発サーバーを起動
 npm run tauri dev
 ```
 
-### Testing
+### ビルド
 
 ```bash
-npm test              # Frontend tests
-cargo test            # Rust tests
-npm run lint          # Linting
-npm run typecheck     # Type checking
+# プロダクションビルド
+npm run tauri build
+
+# テスト実行
+npm test              # フロントエンドテスト
+cargo test            # Rustテスト
+npm run lint          # リンター
+npm run typecheck     # 型チェック
 ```
 
-### Project Structure
+### プロジェクト構造
 
 ```
 csv-analyzer/
-├── src/                    # React frontend
-│   ├── components/         # UI components
+├── src/                    # React フロントエンド
+│   ├── components/         # UIコンポーネント
 │   ├── hooks/             # React hooks
-│   ├── types/             # TypeScript types
-│   └── utils/             # Utility functions
-├── src-tauri/             # Rust backend
-│   ├── src/               # Rust source code
-│   └── Cargo.toml         # Rust dependencies
-├── config/                # Configuration files
-├── data/                  # Data directories
-│   ├── input/             # Input files
-│   └── output/            # Export destination
-└── .github/workflows/     # CI/CD pipelines
+│   ├── types/             # TypeScript型定義
+│   └── utils/             # ユーティリティ関数
+├── src-tauri/             # Rust バックエンド
+│   ├── src/               # Rustソースコード
+│   └── Cargo.toml         # Rust依存関係
+├── config/                # 設定ファイル
+├── data/                  # データディレクトリ
+└── .github/workflows/     # CI/CDパイプライン
 ```
 
-## Performance
+## 📊 パフォーマンス
 
-- **Memory Usage**: Optimized for 16GB RAM systems
-- **Load Time**: ~20 seconds for maximum dataset size
-- **File Size**: 
-  - Windows: ~30MB executable
-  - macOS: ~40MB DMG
-  - Linux: ~35MB AppImage
+- **メモリ使用量**: 16GB RAM環境で最適化
+- **読み込み時間**: 最大データセットで約20秒
+- **ファイルサイズ**: 
+  - Windows: 約30MB
+  - macOS: 約40MB
+  - Linux: 約35MB
+- **対応データ**: 最大800万セル（2,000列×3,000行×4ファイル）
 
-## Security
+## 🔒 セキュリティ
 
-- **Offline Operation**: No network access required or allowed
-- **Sandboxed**: Tauri security model with CSP restrictions
-- **Code Signing**: Automated signing for Windows and macOS releases
+- **オフライン動作**: ネットワークアクセス不要・不許可
+- **データプライバシー**: 全データがローカルメモリ内で処理
+- **サンドボックス**: Tauriセキュリティモデル適用
+- **コード署名**: Windows/macOSリリースの自動署名
 
-## License
+## 📄 ライセンス
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+このプロジェクトはMITライセンスの下で公開されています。
+商用利用、改変、再配布が自由に行えます。
 
-## Contributing
+## 🤝 サポート・貢献
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Commit changes: `git commit -am 'Add feature'`
-4. Push to branch: `git push origin feature-name`
-5. Submit a pull request
+### バグ報告・機能要望
+- [GitHub Issues](https://github.com/yuya-fujita-1201/csv-analyze/issues)でバグ報告や機能要望をお送りください
 
-## Support
+### 一般的な質問
+- [GitHub Discussions](https://github.com/yuya-fujita-1201/csv-analyze/discussions)で質問や情報交換ができます
 
-- **Issues**: Report bugs or request features on [GitHub Issues](https://github.com/yuya-fujita-1201/csv-analyze/issues)
-- **Discussions**: General questions on [GitHub Discussions](https://github.com/yuya-fujita-1201/csv-analyze/discussions)
+### コントリビューション
+1. リポジトリをフォーク
+2. 機能ブランチを作成: `git checkout -b feature-name`
+3. 変更をコミット: `git commit -am '機能を追加'`
+4. ブランチにプッシュ: `git push origin feature-name`
+5. プルリクエストを送信
 
-## Changelog
+## 📋 更新履歴
 
-See [CHANGELOG.md](CHANGELOG.md) for release history.
+最新の更新情報については[CHANGELOG.md](CHANGELOG.md)を参照してください。
+
+---
+
+**CSV Analyzer** - 技術知識不要で使える、高性能CSV・Excel分析ツール  
+© 2024 CSV Analyzer Project. Released under the MIT License.
